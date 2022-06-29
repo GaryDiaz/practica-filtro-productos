@@ -72,15 +72,36 @@ class TablaProducto extends React.Component {
 }
 
 class BarraBusqueda extends React.Component {
-  render() {
-    const textoFiltro = this.props.textoFiltro;
-    const soloEnStock = this.props.soloEnStock;
+  constructor(props) {
+    super(props);
+    this.handleTextoFiltroChange = this.handleTextoFiltroChange.bind(this);
+    this.handleEnStockChange = this.handleEnStockChange.bind(this);
+  }
 
+  handleTextoFiltroChange(e) {
+    this.props.onTextoFiltroChange(e.target.value);
+  }
+
+  handleEnStockChange(e) {
+    this.props.onEnStockChange(e.target.checked);
+  }
+
+  render() {
     return (
       <form>
-        <input type="text" placeholder="Buscar..." value={textoFiltro} />
+        <input
+          type="text"
+          placeholder="Buscar..."
+          value={this.props.textoFiltro}
+          onChange={this.handleTextoFiltroChange}
+        />
         <p>
-          <input type="checkbox" checked={soloEnStock} /> Mostrar productos en stock
+          <input
+            type="checkbox"
+            checked={this.props.soloEnStock}
+            onChange={this.handleEnStockChange}
+          />{" "}
+          Mostrar productos en stock
         </p>
       </form>
     );
@@ -95,12 +116,27 @@ class TablaProductosFiltrable extends React.Component {
       soloEnStock: false,
     };
   }
+
+  handleTextoFiltroChange = (textoFiltro) => {
+    this.setState({
+      textoFiltro: textoFiltro,
+    });
+  };
+
+  handleEnStockChange = (soloEnStock) => {
+    this.setState({
+      soloEnStock: soloEnStock,
+    });
+  };
+
   render() {
     return (
       <div>
         <BarraBusqueda
           textoFiltro={this.state.textoFiltro}
           soloEnStock={this.state.soloEnStock}
+          onTextoFiltroChange={this.handleTextoFiltroChange}
+          onEnStockChange={this.handleEnStockChange}
         />
         <TablaProducto
           productos={this.props.productos}
