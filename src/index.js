@@ -32,10 +32,19 @@ class FilaProducto extends React.Component {
 
 class TablaProducto extends React.Component {
   render() {
+    const textoFiltro = this.props.textoFiltro;
+    const soloEnStock = this.props.soloEnStock;
+
     const filas = [];
     let ultimaCategoria = null;
 
     this.props.productos.forEach((producto) => {
+      if (producto.nombre.indexOf(textoFiltro) === -1) {
+        return;
+      }
+      if (soloEnStock && !producto.enStock) {
+        return;
+      }
       if (producto.categoria !== ultimaCategoria) {
         filas.push(
           <FilaCategoriaProducto
@@ -64,11 +73,14 @@ class TablaProducto extends React.Component {
 
 class BarraBusqueda extends React.Component {
   render() {
+    const textoFiltro = this.props.textoFiltro;
+    const soloEnStock = this.props.soloEnStock;
+
     return (
       <form>
-        <input type="text" placeholder="Buscar..." />
+        <input type="text" placeholder="Buscar..." value={textoFiltro} />
         <p>
-          <input type="checkbox" /> Mostrar productos en stock
+          <input type="checkbox" checked={soloEnStock} /> Mostrar productos en stock
         </p>
       </form>
     );
@@ -76,11 +88,25 @@ class BarraBusqueda extends React.Component {
 }
 
 class TablaProductosFiltrable extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      textoFiltro: "",
+      soloEnStock: false,
+    };
+  }
   render() {
     return (
       <div>
-        <BarraBusqueda />
-        <TablaProducto productos={this.props.productos} />
+        <BarraBusqueda
+          textoFiltro={this.state.textoFiltro}
+          soloEnStock={this.state.soloEnStock}
+        />
+        <TablaProducto
+          productos={this.props.productos}
+          textoFiltro={this.state.textoFiltro}
+          soloEnStock={this.state.soloEnStock}
+        />
       </div>
     );
   }
@@ -102,11 +128,11 @@ const PRODUCTOS = [
   {
     categoria: "Artículos Deportivos",
     precio: "$29.99",
-    enStock: true,
+    enStock: false,
     nombre: "Balón de Básketbol",
   },
   { categoria: "Electrónica", precio: "$99.99", enStock: true, nombre: "iPod Touch" },
-  { categoria: "Electrónica", precio: "$399.99", enStock: true, nombre: "iPhone 5" },
+  { categoria: "Electrónica", precio: "$399.99", enStock: false, nombre: "iPhone 5" },
   { categoria: "Electrónica", precio: "$199.99", enStock: true, nombre: "Nexus 7" },
 ];
 
