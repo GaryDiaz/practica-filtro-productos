@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./css/index.css";
+import M from "materialize-css";
+import "./css/style.min.css";
+//import "./css/index.css";
 
 class FilaCategoriaProducto extends React.Component {
   render() {
@@ -58,7 +60,7 @@ class TablaProducto extends React.Component {
     });
 
     return (
-      <table>
+      <table className="highlight">
         <thead>
           <tr>
             <th>Nombre</th>
@@ -78,6 +80,14 @@ class BarraBusqueda extends React.Component {
     this.handleEnStockChange = this.handleEnStockChange.bind(this);
   }
 
+  componentDidMount() {
+    M.updateTextFields();
+  }
+
+  componentDidUpdate() {
+    M.updateTextFields();
+  }
+
   handleTextoFiltroChange(e) {
     this.props.onTextoFiltroChange(e.target.value);
   }
@@ -89,19 +99,24 @@ class BarraBusqueda extends React.Component {
   render() {
     return (
       <form>
-        <input
-          type="text"
-          placeholder="Buscar..."
-          value={this.props.textoFiltro}
-          onChange={this.handleTextoFiltroChange}
-        />
-        <p>
+        <div className="input-field">
           <input
-            type="checkbox"
-            checked={this.props.soloEnStock}
-            onChange={this.handleEnStockChange}
-          />{" "}
-          Mostrar productos en stock
+            type="text"
+            id="txtBuscar"
+            value={this.props.textoFiltro}
+            onChange={this.handleTextoFiltroChange}
+          />
+          <label htmlFor="txtBuscar">Buscar</label>
+        </div>
+        <p>
+          <label>
+            <input
+              type="checkbox"
+              checked={this.props.soloEnStock}
+              onChange={this.handleEnStockChange}
+            />{" "}
+            <span>Mostrar productos en stock</span>
+          </label>
         </p>
       </form>
     );
@@ -131,7 +146,7 @@ class TablaProductosFiltrable extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="container">
         <BarraBusqueda
           textoFiltro={this.state.textoFiltro}
           soloEnStock={this.state.soloEnStock}
